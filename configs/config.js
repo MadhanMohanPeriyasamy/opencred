@@ -10,7 +10,7 @@ import {applyWorkflowDefaults, OpenCredConfigSchema} from './config-utils.js';
 import {buildAuthorizationConfig} from './authorization.js';
 import {combineTranslations} from './translation.js';
 import crypto from 'node:crypto';
-import {fileURLToPath} from 'node:url';
+import {fileURLToPath, pathToFileURL} from 'node:url';
 import {getRegisteredRedirectUris} from '../lib/redirect-uri.js';
 import {isDcApiAvailable} from '../common/dcapi.js';
 import {logger} from '../lib/logger.js';
@@ -29,15 +29,19 @@ const rootPath = path.join(__dirname, '..');
 
 /** ---------------------- Bedrock Events --------------------------- */
 bedrock.events.on('bedrock-cli.parsed', async () => {
-  await import(path.join(config.paths.config, 'paths.js'));
-  await import(path.join(config.paths.config, 'core.js'));
+  await import(pathToFileURL(path.join(config.paths.config, 'paths.js')).href);
+  await import(pathToFileURL(path.join(config.paths.config, 'core.js')).href);
 });
 
 bedrock.events.on('bedrock.configure', async () => {
-  await import(path.join(config.paths.config, 'express.js'));
-  await import(path.join(config.paths.config, 'server.js'));
-  await import(path.join(config.paths.config, 'database.js'));
-  await import(path.join(config.paths.config, 'https-agent.js'));
+  await import(
+    pathToFileURL(path.join(config.paths.config, 'express.js')).href);
+  await import(
+    pathToFileURL(path.join(config.paths.config, 'server.js')).href);
+  await import(
+    pathToFileURL(path.join(config.paths.config, 'database.js')).href);
+  await import(
+    pathToFileURL(path.join(config.paths.config, 'https-agent.js')).href);
 });
 
 config.views.bundle.packages.push({

@@ -9,4 +9,14 @@ import {config} from '@bedrock/core';
 import '@bedrock/mongodb';
 
 // mongodb config
-config.mongodb.name = 'opencred_localhost';
+config.mongodb.name = process.env.MONGODB_NAME || 'opencred_localhost';
+
+// In hosted deployments (e.g. Render, Heroku, Fly.io) there is no MongoDB on
+// localhost. Provide a full connection string via the MONGODB_URL environment
+// variable, e.g. a MongoDB Atlas SRV URL:
+//   mongodb+srv://user:pass@cluster.mongodb.net/opencred?retryWrites=true&w=majority
+// When set, the host, port, database name, credentials, and options are parsed
+// from this URL. When unset, the local default (localhost:27017) is used.
+if(process.env.MONGODB_URL) {
+  config.mongodb.url = process.env.MONGODB_URL;
+}
